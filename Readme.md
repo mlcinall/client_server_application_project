@@ -1,45 +1,46 @@
-## Collaborative Code Editor System Design.
+# Codex Sync — платформа для совместного редактирования кода
+
+## Схема системы совместного редактирования кода
 ![image](https://github.com/user-attachments/assets/95fb8a09-ae3d-4fe4-badc-0e85e72ef618)
+Архитектура описывает, как клиенты подключаются к веб-сокетам, обмениваются событиями редактирования и сохраняют изменения в хранилище данных с низкой задержкой.
 
-
-## Code Compilation System Design.
+## Схема системы компиляции кода
 ![image](https://github.com/user-attachments/assets/830b079a-b63b-4762-b63c-eaff53f1950f)
+Отдельные сервисы принимают задания на компиляцию, помещают их в очередь и обрабатывают рабочими процессами, возвращая результаты фронтенду.
 
-
-## Video Demo 
-[Watch on Youtube](https://youtu.be/afwZ4l_ZRMQ?si=WwQgzC0g1YT7C6Xk) - 
-[Check LinkedIn Post](https://www.linkedin.com/feed/update/urn:li:activity:7263061074076205056)
-
-
-## set up and run
-```bash
-cd ./app
-```
-write to all 4 services. 
-```bash
-cd ./frontend (eg. of 1 service)
-npm i 
-```
-now open docker desktop.
-after write in terminal
-
-```bash
-cd ../..
-docker-compose up -d
-```
-
-then run 
-```bash 
-npm run dev
-```
-
-which start 4 different services.
-
-## Demo 
-![image](https://github.com/user-attachments/assets/30966c66-9984-4721-98cd-0b45709a1481)
-![image](https://github.com/user-attachments/assets/78a842e2-0c12-4423-bbf9-fbacb41997fd)
-![image](https://github.com/user-attachments/assets/ae41bc9f-fb0b-4044-9ea2-c809df57987b)
-
-
-
-
+## Запуск проекта
+1. Клонируйте репозиторий и перейдите в каталог проекта:
+   ```bash
+   git clone https://github.com/mlcinall/client_server_application_project.git
+   cd client_server_application_project
+   ```
+2. Запустите Redis через Docker Compose и убедитесь, что контейнер активен:
+   ```bash
+   docker compose up -d
+   docker ps
+   ```
+   Если увидите сообщение о том, что порт 6379 уже занят, остановите предыдущий контейнер и повторите запуск:
+   ```bash
+   docker rm -f redis-stack
+   docker compose up -d
+   ```
+3. Установите зависимости, обходя ограничение PowerShell на выполнение скриптов:
+   ```bash
+   & "$env:ProgramFiles\nodejs\npm.cmd" install
+   ```
+4. Скомпилируйте серверные пакеты при помощи TypeScript:
+   ```bash
+   & "$env:ProgramFiles\nodejs\npx.cmd" tsc -p apps\express-server
+   & "$env:ProgramFiles\nodejs\npx.cmd" tsc -p apps\websocket-server
+   & "$env:ProgramFiles\nodejs\npx.cmd" tsc -p apps\worker
+   ```
+   После успешной компиляции в каждом пакете появится каталог `dist` с файлом `index.js`.
+   Если TypeScript не установлен, добавьте его в зависимости и повторите команды выше:
+   ```bash
+   & "$env:ProgramFiles\nodejs\npm.cmd" i -D typescript
+   ```
+5. Запустите все сервисы в режиме разработки и откройте интерфейс:
+   ```bash
+   & "$env:ProgramFiles\nodejs\npm.cmd" run dev
+   ```
+   После запуска сервисов интерфейс будет доступен по адресу `http://localhost:5173`.
